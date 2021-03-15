@@ -1,0 +1,95 @@
+version: '3'
+services:
+  broker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    tty: true
+    environment:
+      DATABASE_USER: root
+      DATABASE_PASSWORD: root
+      DATABASE_NAME: helloprint
+      DATABASE_HOST: postgresdb
+      DATABASE_PORT: 5432
+      KAFKA_HOST: kafka:9092
+    volumes:
+      - ./:/var/www
+    ports:
+    - 8000:8000
+    depends_on:
+      - kafka
+      - postgresdb
+      - zookeeper
+
+  service_a:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    tty: true
+    environment:
+      DATABASE_USER: root
+      DATABASE_PASSWORD: root
+      DATABASE_NAME: helloprint
+      DATABASE_HOST: postgresdb
+      DATABASE_PORT: 5432
+      KAFKA_HOST: kafka:9092
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - kafka
+      - postgresdb
+      - zookeeper
+
+  service_b:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    tty: true
+    environment:
+      DATABASE_USER: root
+      DATABASE_PASSWORD: root
+      DATABASE_NAME: helloprint
+      DATABASE_HOST: postgresdb
+      DATABASE_PORT: 5432
+      KAFKA_HOST: kafka:9092
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - kafka
+      - postgresdb
+      - zookeeper
+
+  postgresdb:
+    container_name: postgresdb
+    image:  postgres:10
+    restart:  always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DATABASE: helloprint
+    ports:
+      - 5432:5432
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  zookeeper:
+   image: wurstmeister/zookeeper
+   ports:
+     - "2181:2181"
+  kafka:
+   image: wurstmeister/kafka:2.12-2.5.0
+   ports:
+     - "9092:9092"
+   environment:
+     #put your host machine ip address
+     KAFKA_ADVERTISED_HOST_NAME: 192.168.1.118
+     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+   volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  default:
+    driver: bridge
