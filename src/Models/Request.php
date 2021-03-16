@@ -19,7 +19,13 @@ use Helloprint\Exceptions\ModelException;
  */
 class Request extends Model
 {
+    /**
+     * @var string
+     */
     public string $table = 'requests';
 
+    /**
+     * @var array|string[]
+     */
     protected array $fillable = ['message', 'token'];
 }

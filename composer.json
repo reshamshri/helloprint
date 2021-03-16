@@ -1,27 +1,28 @@
 {
-    "name": "reshamshri/helloprint",
-    "type": "project",
-    "require-dev": {
-        "phpunit/phpunit": "^9.5",
-        "mockery/mockery": "^1.4"
+  "name": "reshamshri/helloprint",
+  "type": "project",
+  "require-dev": {
+    "phpunit/phpunit": "^9.5",
+    "mockery/mockery": "^1.4"
+  },
+  "require": {
+    "monolog/monolog": "^2.2",
+    "symfony/http-foundation": "^5.2",
+    "ext-json": "*",
+    "ext-curl": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Helloprint\\": "src/"
     },
-    "require": {
-        "monolog/monolog": "^2.2",
-        "symfony/http-foundation": "^5.2",
-        "ext-json": "*"
-    },
-    "autoload": {
-        "psr-4": {
-            "Helloprint\\": "src/"
-        },
-        "files": [
-            "src/Helper.php"
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
-        }
-    },
-    "description": ""
+    "files": [
+      "src/Helper.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Helloprint\\Tests\\": "tests/"
+    }
+  },
+  "description": ""
 }

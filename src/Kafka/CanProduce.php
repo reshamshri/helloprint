@@ -4,9 +4,21 @@
 namespace Helloprint\Kafka;
 
 
+/**
+ * Interface CanProduce
+ * @package Helloprint\Kafka
+ */
 interface CanProduce
 {
-    public function produce( string $payload);
+    /**
+     * @param Producer $producer
+     * @param string $payload
+     * @return mixed
+     */
+    public function produce(Producer $producer, string $payload);
 
-    public function getTopic(): string;
+    /**
+     * @return string
+     */
+    public function getTopicToProduce(): string;
 }

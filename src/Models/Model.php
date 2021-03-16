@@ -5,19 +5,37 @@ namespace Helloprint\Models;
 
 
 use Helloprint\Database\DbConnection;
+use Helloprint\Exceptions\ModelException;
 
 
+/**
+ * Class Model
+ * @package Helloprint\Models
+ */
 class Model extends DbConnection
 {
+    /**
+     * @var string
+     */
     protected string $primaryKey = 'id';
 
+    /**
+     * @var string
+     */
     protected string $table;
 
+    /**
+     * @return $this
+     */
     public function save()
     {
         return $this->exists() ? $this->update() : $this->insert();
     }
 
+    /**
+     * @return array
+     * @throws ModelException
+     */
     protected function find(): array
     {
         $sql = sprintf("select %s from %s where %s = ?",
@@ -29,6 +47,10 @@ class Model extends DbConnection
         return  $this->query->fetch(\PDO::FETCH_ASSOC);
     }
 
+    /**
+     * @return $this
+     * @throws ModelException
+     */
     public function insert(): self
     {
         $sql = sprintf('INSERT INTO %s ( %s ) VALUES( %s ) RETURNING %s',
@@ -45,6 +67,10 @@ class Model extends DbConnection
 
     }
 
+    /**
+     * @return $this
+     * @throws ModelException
+     */
     public function update(): self
     {
         $toUpdate = $this->toUpdate();
@@ -64,6 +90,11 @@ class Model extends DbConnection
         return $this->tap($this->find());
     }
 
+    /**
+     * @param array $where
+     * @return array
+     * @throws ModelException
+     */
     public function where($where = [])
     {
         $toWhere = array_map(function ($field) {
@@ -79,16 +110,26 @@ class Model extends DbConnection
         return $this->query->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    /**
+     * @return bool
+     * @throws ModelException
+     */
     protected function exists(): bool
     {
         return $this->{$this->getKeyName()} && $this->find();
     }
 
+    /**
+     * @return string
+     */
     protected function getKeyName(): string
     {
         return $this->primaryKey;
     }
 
+    /**
+     * @return array
+     */
     protected function getAttributes(): array
     {
         return array_map(function ($item) {
@@ -96,6 +137,10 @@ class Model extends DbConnection
         }, $this->getTableMeta());
     }
 
+    /**
+     * @return array
+     * @throws ModelException
+     */
     protected function getTableMeta(): array
     {
         $sql = "SELECT column_name
@@ -107,6 +152,9 @@ class Model extends DbConnection
         return $this->query->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    /**
+     * @return array
+     */
     private function toUpdate(): array
     {
         $toUpdate = [];
@@ -122,11 +170,17 @@ class Model extends DbConnection
         return $toUpdate;
     }
 
+    /**
+     * @return string
+     */
     private function prepareBindingKeys(): string
     {
         return implode(',', array_map(fn($field) => ':' . $field, $this->fillable));
     }
 
+    /**
+     * @return array
+     */
     private function prepareBindingValues(): array
     {
         return array_map(function ($field) {
@@ -134,7 +188,11 @@ class Model extends DbConnection
         }, $this->fillable);
     }
 
-    private function tap( array $result): self
+    /**
+     * @param array $result
+     * @return $this
+     */
+    private function tap(array $result): self
     {
         array_walk($result, function ($value, $key) {
             $this->{$key} = $value;

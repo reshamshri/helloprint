@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Helloprint\Models\Exceptions;
+namespace Helloprint\Models;
 
 
 class ModelNotFoundException extends \Exception

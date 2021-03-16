@@ -10,23 +10,28 @@ use Helloprint\Kafka\Exceptions\ProducerException;
 class Producer
 {
 
+    /**
+     * @var string
+     */
     public string $topic;
 
+    /**
+     * @var string
+     */
     public string $message;
 
-    private \RdKafka\Conf $conf;
-
+    /**
+     * @var \RdKafka\Producer
+     */
     private \RdKafka\Producer $producer;
 
     /**
      * Producer constructor.
-     * @param \RdKafka\Conf $config
+     * @param \RdKafka\Producer $producer
      */
-    public function __construct(\RdKafka\Conf $config)
+    public function __construct(\RdKafka\Producer $producer)
     {
-        $this->producer = new \RdKafka\Producer($config);
-        $this->producer->setLogLevel(LOG_DEBUG);
-
+        $this->producer = $producer;
     }
 
     /**
@@ -45,7 +50,12 @@ class Producer
         $this->message = $message;
     }
 
-    public function publish(): void
+    /**
+     * Publish message on Kafka
+     * @return bool
+     * @throws ProducerException
+     */
+    public function publish(): bool
     {
         $topic = $this->producer->newTopic($this->topic);
         $topic->produce(RD_KAFKA_PARTITION_UA, 0, $this->message);
@@ -56,8 +66,8 @@ class Producer
             throw new ProducerException ('Was unable to flush, messages might be lost!');
         }
 
+        return true;
     }
-
 
 }
 

@@ -23,15 +23,23 @@ Class Message
 
     /**
      * Message constructor.
-     * @param \RdKafka\Message $message
      */
-    public function __construct(\RdKafka\Message $message)
+    public function __construct()
     {
-        $this->message = $message;
         $this->logger = new Log('Message');
-        $this->logMessage($message);
     }
 
+    /**
+     * @param \RdKafka\Message $message
+     * @return $this
+     */
+    public function setMessage(\RdKafka\Message $message):self
+    {
+        $this->message = $message;
+        $this->logMessage($message);
+
+        return $this;
+    }
     /**
      * @return mixed
      */

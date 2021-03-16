@@ -7,16 +7,23 @@ use Helloprint\Kafka\Exceptions\ConsumerException;
 use Helloprint\Kafka\Exceptions\ConsumerTimeOutException;
 use Helloprint\Kafka\Exceptions\KafkaTopicException;
 
+/**
+ * Trait Consumable
+ * @package Helloprint\Kafka
+ */
 trait Consumable
 {
-    public function consume()
+    /**
+     * @param Consumer $consumer
+     * @return mixed
+     */
+    public function consume(Consumer $consumer)
     {
-        $this->consumer = new Consumer($this->brokerConfig->getKafkaConf(), self::DEFAULT_CONSUMER_GROUP);
-
-        $this->consumer->setTopic(self::CONSUME_ON_TOPIC);
+        $consumer->setTopic($this->getTopicToConsume());
 
         try {
-            return $this->consumer->consumeMessage();
+
+            return $consumer->consumeMessage();
         } catch (ConsumerException | KafkaTopicException $e) {
             $error = sprintf("Got exception while consuming message %s \n", $e->getMessage());
             $this->logger->error($error, [], $e);

@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     tty: true
+    command: bash -c 'composer install && php -S localhost:8000 -t src/Broker'
     environment:
       DATABASE_USER: root
       DATABASE_PASSWORD: root
@@ -28,6 +29,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     tty: true
+    command: 'php src/ServiceA/index.php'
     environment:
       DATABASE_USER: root
       DATABASE_PASSWORD: root
@@ -48,6 +50,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     tty: true
+    command: 'php src/ServiceB/index.php'
     environment:
       DATABASE_USER: root
       DATABASE_PASSWORD: root

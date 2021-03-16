@@ -11,6 +11,11 @@ use Symfony\Component\HttpFoundation\Request;
 */
 class Route
 {
+    /**
+     * @param $name
+     * @param $arguments
+     * @throws RouteNotFoundException
+     */
     public static function __callStatic($name, $arguments)
     {
         $request = Request::createFromGlobals();

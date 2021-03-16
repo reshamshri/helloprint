@@ -3,9 +3,10 @@
 
 namespace Helloprint\Broker;
 use Helloprint\Kafka\CanProduce;
+use Helloprint\Kafka\Producer;
 use Helloprint\Kafka\Producible;
 use Helloprint\Logger\Log;
-use Helloprint\Models\Exceptions\ModelNotFoundException;
+use Helloprint\Models\ModelNotFoundException;
 use Helloprint\Models\Request as RequestModel;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,9 +18,26 @@ class Controller implements CanProduce
 {
     use Producible;
 
+    /**
+     * @var RequestModel
+     */
     private RequestModel $model;
+    /**
+     * @var Log
+     */
     private Log $logger;
+    /**
+     *
+     */
     public const DEFAULT_TOPIC = 'TopicA';
+    /**
+     *
+     */
+    public const DEFAULT_MESSAGE = 'Hi';
+    /**
+     * @var Producer
+     */
+    private Producer $producer;
 
 
     /**
@@ -40,9 +58,17 @@ class Controller implements CanProduce
         $requestModel = $this->saveMessage($request);
         $payload = json_encode(array('uuid' => $requestModel->uuid, 'message' => $requestModel->message));
 
-        $this->produce($payload);
+        $this->produce($this->getProducer(), $payload);
 
         return $requestModel->token;
+    }
+
+    /**
+     * @param Producer $producer
+     */
+    public function setProducer(Producer $producer)
+    {
+        $this->producer = $producer;
     }
 
     /**
@@ -64,21 +90,30 @@ class Controller implements CanProduce
 
     /**
      * @param Request $request
-     * @return $this
+     * @return RequestModel
      */
     private function saveMessage(Request $request): RequestModel
     {
         $this->model->token = getToken();
-        //TODO:check if the token is not duplicated else regenerate a new token
-
-        $this->model->message = $request->get('message','Hi');
+        $this->model->message = $request->get('message',self::DEFAULT_MESSAGE);
         $this->model->save();
 
         return $this->model;
     }
 
-    public function getTopic(): string
+    /**
+     * @return string
+     */
+    public function getTopicToProduce(): string
     {
         return self::DEFAULT_TOPIC;
+    }
+
+    /**
+     * @return Producer
+     */
+    private function getProducer(): Producer
+    {
+        return $this->producer ?? producer();
     }
 }

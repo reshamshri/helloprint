@@ -8,6 +8,9 @@ class Config
     public const DEFAULT_CONFIG_PATH = __DIR__.'/config';
     public static array $configuration = [];
 
+    /**
+     * @return array
+     */
     public static function buildConfig(): array
     {
         if(!empty(self::$configuration)) {

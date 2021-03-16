@@ -4,9 +4,20 @@
 namespace Helloprint\Kafka;
 
 
+/**
+ * Interface CanConsume
+ * @package Helloprint\Kafka
+ */
 interface CanConsume
 {
-    public function consume();
+    /**
+     * @param Consumer $consumer
+     * @return mixed
+     */
+    public function consume(Consumer $consumer);
 
-    public function getTopic(): string;
+    /**
+     * @return string
+     */
+    public function getTopicToConsume(): string;
 }
