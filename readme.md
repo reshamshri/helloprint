@@ -1,8 +1,8 @@
-##Helloprint Challenge - Backend
+## Helloprint Challenge - Backend
 Minimal implementation to demonstrate the basic concepts of working with microservices with asynchronous
 events.
 
-###How to run and test project
+### How to run and test project
 - Step1: Change the value KAFKA_ADVERTISED_HOST_NAME inside to docker-compose.yml to your host IP.
 - Step2: ./setup.sh - build the project. Press CRTL+C once done.
 - Step3: ./test.sh - to run the PHPUnit
