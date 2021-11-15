@@ -1,4 +1,32 @@
 ## Helloprint Challenge - Backend
+### Scope
+STACK REQUIREMENTS
+- PHP 7.4
+- Kafka 2.12
+- Postgres 10
+- Docker v 3.7
+
+No usage of any kind of framework for this challenge.
+
+GOALS
+- Build a PHP script called "Requester" that sends a message "Hi, " to the "Broker" service.
+- The "Broker" must store this message on the "Broker" schema in Postgres ("request" table), and
+return a token that identifies this registration to the "Requester".
+- After the "Broker" will produce a message into Kafka "Topic A".
+- The "Requester" must start pulling a response from the "Broker" into intervals of 50ms, at the
+maximum of 1s. If until then doesn't get a response, throws an exception "no response", and if
+does prints the final message.
+- The "Topic A" will be consumed by the "Service A", that will append a random name to the
+"Requester" message. List of names: "Joao, Bram, Gabriel, Fehim, Eni, Patrick, Micha, Mirzet, Liliana,
+Sebastien".
+- After "Service A" appends the name will send this message to the "Broker" service.
+- Then the "Broker" will grab this message will produce a message into Kafka "Topic B".
+- The "Topic B" will be read by the "Service B", that will append the word "Bye". This full message will
+be store directly on the "Broker" schema "request" table under the token registration to be fetched
+by the broker later on as a response to the “Requester”.
+
+
+## Solution
 Minimal implementation to demonstrate the basic concepts of working with microservices with asynchronous
 events.
 
